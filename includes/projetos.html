@@ -1,0 +1,1226 @@
+<?php
+
+
+
+if($_POST['addHoraRealizada']) {
+	$sql = "INSERT INTO pw_horas_fases (id_fase, horas, type, data) VALUES ('".$_POST['addHoraRealizada']."', '".$_POST['horaRealizada']."', 2, '".$_POST['dataRealizada']."')";
+	$query = sqlsrv_query($conn, $sql);
+
+
+
+	echo "<script>window.location.replace('".$_POST['url']."');</script>";
+}
+
+else if($_POST['addHorasFase']) {
+	$sql = "INSERT INTO pw_horas_fases (id_fase, horas, type) VALUES ('".$_POST['addHorasFase']."', '".$_POST['horasHomemFase']."', 1)";
+	$query = sqlsrv_query($conn, $sql);
+
+	echo "<script>window.location.replace('".$_POST['url']."');</script>";
+}
+
+
+else if($_POST['loginResponsavel']) {
+
+
+	$sqlResp = "SELECT * FROM pw_usuarios WHERE login LIKE '".$_POST['loginResponsavel']."'";
+	$queryResp = sqlsrv_query($conn, $sqlResp);
+	$rowResp = sqlsrv_fetch_array($queryResp);
+
+	$idResponsavel = $rowResp['id'];
+	//echo "<p>SQL Resp: ".$sqlResp."</p>";
+
+
+	$sql = "INSERT INTO pw_projetos_detalhes (id_projeto, id_responsavel, id_categoria, dataInicialPrevista, dataFinalPrevista) VALUES ('".$_POST['idProjeto']."', '".$idResponsavel."', '".$_POST['idCategoria']."', '".$_POST['inicioPrevisto']."', '".$_POST['finalPrevisto']."')";
+	$query = sqlsrv_query($conn, $sql);
+
+	//echo "<p>SQL 1: ".$sql."</p>";
+
+	$time = explode(",", $_POST['usuariosEquipe']);
+
+	for($i = 0; $i < count($time)-1; $i++) {
+	$sql = "INSERT INTO pw_times_projetos (id_projeto, id_usuario) VALUES ('".$_POST['idProjeto']."', '".$time[$i]."')";
+	$query = sqlsrv_query($conn, $sql);
+	}
+
+
+	for($i = 0; $i < $_POST['numeroFases']; $i++) {
+		$j = $i + 1;
+		$sql = "INSERT INTO pw_fases_projetos (id_projeto, nome) VALUES ('".$_POST['idProjeto']."', 'Fase ".$j."')";
+		$query = sqlsrv_query($conn, $sql);
+	}
+
+	if($query) {
+			echo '<h1 id="tituloPagina">Detalhes Inseridos com Sucesso!</h1>
+
+	<div id="conteudoCinza">';
+			echo "<a href='projetos' id='botaoVoltar'><span>Voltar</span></a>";
+			echo "</div>";
+		}
+
+
+?>
+
+
+<?php
+
+}
+
+else if($_POST['acao']) {
+	if($_POST['acao'] == "adicionar") {
+		$sql = "INSERT INTO pw_projetos (nome, status) VALUES ('".$_POST['nome']."', '".$_POST['ativo']."')";
+		$query = sqlsrv_query($conn, $sql);
+
+
+		if($query) {
+
+			$sqlLast = "SELECT * FROM pw_projetos ORDER BY id DESC";
+			$queryLast = sqlsrv_query($conn, $sqlLast);
+			$rowLast = sqlsrv_fetch_array($queryLast);
+
+			echo '<h1 id="tituloPagina">Primeiros passos | '.$_POST['nome'].'</h1>
+
+			<div id="conteudoCinza"><div id="pergunta1"><p id="pergunta">Você é o Responsável pelo Projeto <span class="grifado">'.$_POST['nome'].'</span>?</p>';
+			
+			$loginResponsavel = $_SESSION['loginUser']; ?>
+
+
+			<form id="detalhesProjeto" method="POST" action="projetos">
+
+			<input type="hidden" value="<?=$rowLast['id'];?>" id="idProjeto" name="idProjeto">
+			<input type="hidden" value="<?=$_POST['inicioPrevisto'];?>" id="inicioPrevisto" name="inicioPrevisto">
+			<input type="hidden" value="<?=$_POST['finalPrevisto'];?>" id="finalPrevisto" name="finalPrevisto">
+			<input type="hidden" value="" id="loginResponsavel" name="loginResponsavel">
+			<input type="hidden" value="" id="idCategoria" name="idCategoria">
+			<input type="hidden" value="" id="nomeCategoria" name="nomeCategoria">
+			<input type="hidden" value="0" id="escolherEquipe" name="escolherEquipe">
+			<input type="hidden" value="" id="usuariosEquipe" name="usuariosEquipe">
+
+			<script>
+
+			$(document).ready(function () {
+
+				$("#selectCategoria").change(function() {
+				<?php
+				$sql = "SELECT COUNT (*) AS QTDE FROM pw_categorias WHERE status = '1'";
+				$query = sqlsrv_query($conn, $sql);
+				$num = sqlsrv_num_rows($query);
+				$row = sqlsrv_fetch_array($query);
+
+				$sql2 = "SELECT * FROM pw_categorias WHERE status = '1' ORDER BY nome";
+				$query2 = sqlsrv_query($conn, $sql2);
+
+				for($i = 0; $i < $row['QTDE'];$i++) {
+
+				$row2 = sqlsrv_fetch_array($query2);
+				?>
+					if(this.value == <?=$row2['id']?>) document.getElementById("valorCategoria").innerHTML = "<?=$row2['nome']?>";
+				<?php } ?>
+				});
+
+				$(".grid.menor").click(function () {
+					if(this.className == "grid usario menor selecionado") {
+						this.className = "grid usario menor";
+						var subs = document.getElementById('usuariosEquipe').value.replace($(this).data("user")+",", "");
+						document.getElementById('usuariosEquipe').value = subs;
+						document.getElementById('usuarioEscolhido'+$(this).data("login")).style.display = "none";
+					}
+
+					else {
+						this.className = "grid usario menor selecionado";
+						document.getElementById('usuariosEquipe').value += $(this).data("user")+",";
+						document.getElementById('usuarioEscolhido'+$(this).data("login")).style.display = "inline-block";
+					}
+				});
+
+			});
+
+			function seguir(valor) {
+				document.getElementById('loginResponsavel').value = valor;
+				document.getElementById('usuarioEquipe'+valor).style.display = 'none';
+				$('#pergunta1').fadeOut(520, function() {
+				    $('#pergunta2').fadeIn(520);
+				});
+			}
+
+			function seguir2() {
+				document.getElementById('idCategoria').value = document.getElementById('selectCategoria').value;
+				$('#pergunta2').fadeOut(520, function() {
+				    $('#pergunta3').fadeIn(520);
+				});
+			}
+
+			function seguir3() {
+				document.getElementById('escolherEquipe').value = 1;
+				$('#pergunta3').fadeOut(520, function() {
+				    $('#pergunta4').fadeIn(520);
+				});
+			}
+
+			function pular() {
+				document.getElementById('escolherEquipe').value = 0;
+				$('#pergunta3').fadeOut(520, function() {
+				    $('#pergunta5').fadeIn(520);
+				});
+			}
+
+			function seguir4() {
+				if(document.getElementById('usuariosEquipe').value == "") document.getElementById('avisoEquipe').style.opacity = '1';
+				else {
+					$('#pergunta4').fadeOut(520, function() {
+					    $('#pergunta5').fadeIn(520);
+					    document.getElementById('avisoEquipe').style.opacity = '0';
+					});
+				}
+			}
+
+			function seguir5() {
+				if(document.getElementById('numeroFases').value == "") document.getElementById('avisoFases').style.opacity = '1';
+				else {
+					$('#pergunta5').fadeOut(520, function() {
+					    $('#pergunta6').fadeIn(520);
+					    document.getElementById('avisoFases').style.opacity = '0';
+					});
+				}
+			}
+
+			</script>
+
+			<a onclick='seguir("<?=$loginResponsavel;?>")' id='botaoSim'>Sim</a>
+			
+			<a onclick='escolherNovoResponsavel()' id='botaoNao'>Não</a></div>
+
+			<div id="pergunta2" style="display: none"><p id="pergunta">Qual a categoria do Projeto <span class="grifado"><?=$_POST['nome'];?></span>?</p>
+
+			<select id="selectCategoria" name="selectCategoria">
+				<option value="0" selected>Sem Categoria</option>
+				<?php
+				$sql = "SELECT COUNT (*) AS QTDE FROM pw_categorias WHERE status = '1'";
+				$query = sqlsrv_query($conn, $sql);
+				$num = sqlsrv_num_rows($query);
+				$row = sqlsrv_fetch_array($query);
+
+				$sql2 = "SELECT * FROM pw_categorias WHERE status = '1' ORDER BY nome";
+				$query2 = sqlsrv_query($conn, $sql2);
+
+				for($i = 0; $i < $row['QTDE'];$i++) {
+
+				$row2 = sqlsrv_fetch_array($query2);
+				?>
+
+				<option value="<?=$row2['id']?>"><?=$row2['nome']?></option>
+				<?php } ?>
+
+			</select>
+
+			<a onclick='seguir2()' id='botaoSim'>Escolher</a></div>
+
+
+
+			<div id="pergunta3" style="display: none"><p id="pergunta">Deseja escolher a Equipe do Projeto <span class="grifado"><?=$_POST['nome'];?></span> agora?</p>
+			<a onclick='seguir3()' id='botaoSim'>Sim</a>
+			
+			<a onclick='pular()' id='botaoNao'>Não</a></div>
+
+			<div id="pergunta4" style="display: none"><p id="pergunta">Escolha os Membros da Equipe do Projeto <span class="grifado"><?=$_POST['nome'];?></span>:</p>
+
+			<?php
+			$sql3 = "SELECT COUNT (*) AS QTDE FROM pw_usuarios WHERE status = 1";
+			$query3 = sqlsrv_query($conn, $sql3);
+			$row3 = sqlsrv_fetch_array($query3);
+
+
+			$sql4 = "SELECT * FROM pw_usuarios WHERE status = 1";
+			$query4 = sqlsrv_query($conn, $sql4);
+			
+			for($i = 0; $i < $row3['QTDE']; $i++) {
+
+			$row4 = sqlsrv_fetch_array($query4);
+
+			?><a class="grid usuario menor" data-user="<?=$row4['id'];?>" data-login="<?=$row4['login'];?>" id="usuarioEquipe<?=$row4['login'];?>" target="_blank">
+
+			<div class="imagemUsuario"></div>
+
+			<div class="nomeUsuario"><?=$row4['nome']?></div>
+
+			</a><?php } ?>
+
+			<p><a onclick='seguir4()' id='botaoSim'>Escolher</a> <span id="avisoEquipe">Ao menos UM usuário deve ser escolhido!</span></p></div>
+
+			<div id="pergunta5" style="display: none"><p id="pergunta">Quantas <span class="grifado">Fases</span> tem o Projeto <span class="grifado"><?=$_POST['nome'];?></span>?</p>
+
+			<input name="numeroFases" placeholder="Número de Fases" id="numeroFases"><a onclick='seguir5()' id='botaoSim'>Definir</a>
+			<p><span id="avisoFases">O Projeto precisa ter ao menos UMA Fase!</span></p></div>
+
+
+
+			<div id="pergunta6" style="display: none"><p id="pergunta">Detalhes do Projeto <span class="grifado"><?=$_POST['nome'];?></span>:</p>
+
+			<p><span class="tituloDetalhes">Responsável: </span><span id="valorResponsavel"></span></p>
+
+			<p><span class="tituloDetalhes">Categoria: </span><span id="valorCategoria"></span></p>
+
+			<p><span class="tituloDetalhes">Número de Fases: </span><span id="valorFases"></span></p>
+
+			<p><span class="tituloDetalhes">Equipe: </span></p>
+
+			<?php
+			$sql3 = "SELECT COUNT (*) AS QTDE FROM pw_usuarios WHERE status = 1";
+			$query3 = sqlsrv_query($conn, $sql3);
+			$row3 = sqlsrv_fetch_array($query3);
+
+
+			$sql4 = "SELECT * FROM pw_usuarios WHERE status = 1";
+			$query4 = sqlsrv_query($conn, $sql4);
+			
+			for($i = 0; $i < $row3['QTDE']; $i++) {
+
+			$row4 = sqlsrv_fetch_array($query4);
+
+			?><a class="grid usuario menor" data-user="<?=$row4['id'];?>" style="display: none" id="usuarioEscolhido<?=$row4['login'];?>" target="_blank">
+
+			<div class="imagemUsuario"></div>
+
+			<div class="nomeUsuario"><?=$row4['nome']?></div>
+
+			</a><?php } ?>
+
+			<p><a onclick='document.getElementById("detalhesProjeto").submit()' id='botaoSim'>Confirmar</a></p></div>
+
+			</form>
+
+			
+			<?php
+
+			echo "</div>";
+		}
+	}
+
+	if($_POST['acao'] == "editar") {
+		$sql = "UPDATE pw_projetos SET nome = '".$_POST['nome']."', status = '".$_POST['ativo']."' WHERE id = '".$_POST['idCategoria']."'";
+		$query = sqlsrv_query($conn, $sql);
+
+		if($query) {
+			echo '<h1 id="tituloPagina">Editado com Sucesso!</h1>
+
+	<div id="conteudoCinza">';
+			echo "<a href='".$lnk."projetos' id='botaoVoltar'><span>Voltar</span></a>";
+			echo "</div>";
+		}
+	}
+}
+
+else {
+$hierarquia = explode("/", $url);
+
+if(!isset($hierarquia[1])) {
+
+?><div id="breadcrumbs"><a href="<?=$lnk;?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos">Projetos</a></div>
+
+<h1 id="tituloPagina">Projetos<a id="botaoAdd" href="<?=$lnk;?>projetos/adicionar">+<span>Adicionar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<a class="linkProjeto" id="novoProjeto" href="<?=$lnk;?>projetos">Portfólio</a><a class="linkProjeto" id="timelineProjeto" href="<?=$lnk;?>projetos/timeline">Linha do Tempo</a><a class="linkProjeto" id="pesquisarProjeto" href="<?=$lnk;?>projetos/pesquisar">Pesquisar Projeto</a><a class="linkProjeto" id="ordenarProjeto">Ordenar</a>
+
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_projetos WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT 
+pw_projetos.id,
+pw_projetos.nome,
+pw_usuarios.nome AS responsavel,
+pw_projetos.status,
+id_responsavel,
+id_categoria,
+dataInicialPrevista,
+dataFinalPrevista,
+tc
+FROM pw_projetos 
+
+LEFT JOIN pw_projetos_detalhes ON
+pw_projetos.id = pw_projetos_detalhes.id_projeto
+
+LEFT JOIN pw_usuarios ON
+pw_projetos_detalhes.id_responsavel = pw_usuarios.id
+
+WHERE pw_projetos.status = '1' ORDER BY pw_projetos_detalhes.tc DESC";
+
+//echo $sql2;
+//echo $row['QTDE'];
+
+$query2 = sqlsrv_query($conn, $sql2);
+
+
+if($row['QTDE'] == 0) echo "<p id='semResultados'>Nenhum Projeto Encontrado!<a href='".$lnk."projetos/adicionar'><span>Adicionar o Primeiro</span></a></p>";
+
+else { ?>
+
+<div class="list projeto cabecalho">
+
+<div class="nomeProjeto"><a>Nome do Projeto</a><span class="responsavel">Responsável</span><span class="dataInicialPrevista">Data Inicial Prevista</span><span class="dataFinalPrevista">Data Final Prevista</span><span class="tc">TC</span></div>
+
+</div>
+
+<?php }
+
+for($i = 0; $i < $row['QTDE']; $i++) {
+
+$row2 = sqlsrv_fetch_array($query2);
+
+if(isset($row2['dataFinalPrevista'])) $dataFinal = $row2['dataFinalPrevista']->format('d/m/Y');
+else $dataFinal = "Não Informada";
+if(isset($row2['dataInicialPrevista'])) $dataInicial = $row2['dataInicialPrevista']->format('d/m/Y');
+else $dataInicial = "Não Informada";
+if(!isset($row2['tc'])) $row2['tc'] = 0;
+
+
+?><div class="list projeto">
+
+
+<div class="nomeProjeto"><a href="<?=$lnk;?>projetos/<?=$row2['id']?>"><?=$row2['nome']?></a><span class="responsavel"><?=$row2['responsavel']?></span><span class="dataInicialPrevista"><?=$dataInicial;?></span><span class="dataFinalPrevista"><?=$dataFinal;?></span><span class="tc<?php if($row2['tc'] > 0.75) echo ' critico'; else if($row2['tc'] > 0.5) echo ' alerta'; ?>"><?=$row2['tc']?></span></div>
+
+</div><?php 
+
+}
+
+?>
+
+</div>
+
+<?php } else if($hierarquia[1] == "timeline") { ?><div id="breadcrumbs"><a href="<?=$lnk;?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos">Projetos</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/timeline">Linha do Tempo</a></div>
+
+<h1 id="tituloPagina">Projetos | Linha do Tempo<a id="botaoAdd" href="<?=$lnk;?>projetos/adicionar">+<span>Adicionar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<a class="linkProjeto" id="novoProjeto" href="<?=$lnk;?>projetos">Portfólio</a><a class="linkProjeto" id="timelineProjeto" href="<?=$lnk;?>projetos/timeline">Linha do Tempo</a><a class="linkProjeto" id="pesquisarProjeto" href="<?=$lnk;?>projetos/pesquisar">Pesquisar Projeto</a><a class="linkProjeto" id="ordenarProjeto">Ordenar</a>
+
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_projetos WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT 
+pw_projetos.id,
+pw_projetos.nome,
+pw_usuarios.nome AS responsavel,
+pw_projetos.status,
+id_responsavel,
+id_categoria,
+dataInicialPrevista,
+dataFinalPrevista,
+tc
+FROM pw_projetos 
+
+LEFT JOIN pw_projetos_detalhes ON
+pw_projetos.id = pw_projetos_detalhes.id_projeto
+
+LEFT JOIN pw_usuarios ON
+pw_projetos_detalhes.id_responsavel = pw_usuarios.id
+
+WHERE pw_projetos.status = '1' ORDER BY pw_projetos_detalhes.tc DESC";
+
+//echo $sql2;
+//echo $row['QTDE'];
+
+$query2 = sqlsrv_query($conn, $sql2);
+
+
+if($row['QTDE'] == 0) echo "<p id='semResultados'>Nenhum Projeto Encontrado!<a href='".$lnk."projetos/adicionar'><span>Adicionar o Primeiro</span></a></p>";
+
+else { ?>
+
+<div class="list projeto cabecalho">
+
+<div class="nomeProjeto"><a>Nome do Projeto</a><span class="timeline"></span><span class="tc">TC</span><span class="custo">Custo</span><span class="hxh">HxH</span></div>
+
+</div>
+
+<?php }
+
+for($i = 0; $i < $row['QTDE']; $i++) {
+
+$row2 = sqlsrv_fetch_array($query2);
+
+if(!isset($row2['tc'])) $row2['tc'] = 0;
+
+
+?><div class="list projeto">
+
+
+<div class="nomeProjeto"><a href="<?=$lnk;?>projetos/<?=$row2['id']?>"><?=$row2['nome']?></a><span class="timeline"></span><span class="tc<?php if($row2['tc'] > 0.75) echo ' critico'; else if($row2['tc'] > 0.5) echo ' alerta'; ?>"><?=$row2['tc']?></span><span class="custo">Custo</span><span class="hxh">HxH</span></div>
+
+</div><?php 
+
+}
+
+?>
+
+</div>
+
+
+<?php } else if($hierarquia[1] == "adicionar") { 
+
+
+?><div id="breadcrumbs"><a href="<?=$lnk;?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos">Projetos</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/adicionar">Adicionar</a></div>
+
+<h1 id="tituloPagina">Projetos | Adicionar</h1>
+
+
+<div id="conteudoCinza">
+
+<form id="formAdicionar" method="post" action="../projetos">
+
+<input type="hidden" name="acao" value="adicionar">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<script>
+  $( function() {
+ 
+ $(".data").datepicker({
+    dateFormat: 'dd/mm/yy',
+    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+    nextText: 'Próximo',
+    prevText: 'Anterior'
+});
+
+
+    $( "#inicioPrevisto" ).datepicker();
+    $( "#finalPrevisto" ).datepicker();
+  } );
+
+
+  </script>
+ 
+
+<label>Nome do Projeto<input type="text" name="nome" required></label>
+<label>Início Previsto<input type="text" name="inicioPrevisto" class="data" id="inicioPrevisto" required></label>
+<label>Final Previsto<input type="text" name="finalPrevisto" class="data" id="finalPrevisto" required></label>
+
+<input type="hidden" name="ativo" value="1">
+
+
+
+<input type="submit" value="Salvar">
+
+</form>
+
+</div>
+
+
+<?php } else if($hierarquia[1] == "editar") { 
+
+
+
+$sql = "SELECT * FROM pw_projetos WHERE status = '1' AND id='".$hierarquia[2]."'";
+$query = sqlsrv_query($conn, $sql);
+$row = sqlsrv_fetch_array($query);
+
+
+?><div id="breadcrumbs"><a href="<?=$lnk;?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos">Projetos</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/<?=$row['id']?>"><?=$row['nome']?></a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/editar/<?=$row['id']?>">Editar</a></div>
+
+<h1 id="tituloPagina">Projetos | Editar Projeto | <?=$row['nome']?></h1>
+
+
+<div id="conteudoCinza">
+
+<form id="formAdicionar" method="post" action="../projetos">
+
+<input type="hidden" name="acao" value="editar">
+<input type="hidden" name="idCategoria" value="<?=$row['id']?>">
+
+<label>Nome do Projeto<input type="text" name="nome" value="<?=$row['nome']?>" required></label>
+
+<input type="hidden" name="ativo" value="1">
+
+
+
+<input type="submit" value="Salvar">
+
+</form>
+
+</div>
+
+
+<?php } else if($hierarquia[1] > 0) { 
+
+$sql = "SELECT 
+pw_projetos.id,
+pw_projetos.nome,
+pw_usuarios.id AS idResponsavel,
+pw_usuarios.nome AS responsavel,
+pw_projetos.status,
+id_responsavel,
+id_categoria,
+dataInicialPrevista,
+dataFinalPrevista,
+tc
+FROM pw_projetos 
+
+LEFT JOIN pw_projetos_detalhes ON
+pw_projetos.id = pw_projetos_detalhes.id_projeto
+
+LEFT JOIN pw_usuarios ON
+pw_projetos_detalhes.id_responsavel = pw_usuarios.id
+
+WHERE pw_projetos.status = '1' AND pw_projetos.id = '".$hierarquia[1]."'";
+
+$query = sqlsrv_query($conn, $sql);
+$row = sqlsrv_fetch_array($query);
+
+if(empty($row['tc'])) $row['tc'] = 0;
+
+//echo "AQUI: ".$hierarquia[2];
+
+if(empty($hierarquia[2])) {
+
+?><div id="breadcrumbs"><a href="<?=$lnk;?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos">Projetos</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/<?=$row['id']?>"><?=$row['nome']?></a></div>
+
+<h1 id="tituloPagina">Projetos | <?=$row['nome']?><a id="botaoAdd" class="editar" href="<?=$lnk;?>projetos/editar/<?=$row['id']?>"><span>Editar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<h2>Visão Geral<span title="Taxa de Contribuição" class='tcVisaoGeral<?php if($row['tc'] > 0.75) echo ' critico'; else if($row['tc'] > 0.5) echo ' alerta'; ?>'><?=$row['tc']?></span></h2>
+
+
+<div id="quadrantes">
+    <h3>Análise Custo X Tempo</h3>
+	<div class="quadrante"></div><div class="quadrante"></div><div class="quadrante"></div><div class="quadrante"></div>
+	<div class="circulo vermelho"></div><div class="circulo amarelo"></div><div class="circulo verde"></div>
+	<a id="maskQuadrantes" href="<?=$lnk;?>projetos/editar/<?=$row['id']?>"><img class="iconeCancel" id="icon1" src="<?=$lnk;?>img/cancel.png"><img class="iconeCancel" id="icon2" src="<?=$lnk;?>img/add.png"><span class="sem">Sem Dados</span><span class="add">Adicionar</span></a>
+</div>
+
+<div id="fasesProjeto">
+    <h3>Fases do Projeto</h3>
+    <div id="graficoFases">
+    	<?php
+    	$sqlFase = "SELECT * FROM pw_fases_projetos WHERE id_projeto = '".$hierarquia[1]."'";
+		$queryFase = sqlsrv_query($conn, $sqlFase);
+
+    	$sqlCustoTotal = "SELECT SUM(custo) AS total, type FROM pw_fases_projetos
+		INNER JOIN pw_custos_fases ON
+		pw_fases_projetos.id = pw_custos_fases.id_fase WHERE id_projeto = '".$hierarquia[1]."' GROUP BY type ORDER BY type";
+		$queryCustoTotal = sqlsrv_query($conn, $sqlCustoTotal);
+		$rowCustoTotal = sqlsrv_fetch_array($queryCustoTotal);
+
+    	$sqlHorasTotal = "SELECT SUM(horas) AS total, type FROM pw_fases_projetos
+		INNER JOIN pw_horas_fases ON
+		pw_fases_projetos.id = pw_horas_fases.id_fase WHERE id_projeto = '".$hierarquia[1]."' GROUP BY type ORDER BY type";
+		$queryHorasTotal = sqlsrv_query($conn, $sqlHorasTotal);
+		$rowHorasTotal = sqlsrv_fetch_array($queryHorasTotal);
+
+		$total = 0;
+		while($rowFase = sqlsrv_fetch_array($queryFase)) {
+			$total++;
+
+			$sqlCusto = "SELECT sum(custo) AS custo FROM pw_custos_fases WHERE id_fase = '".$rowFase['id']."' AND type = 1";
+			$queryCusto = sqlsrv_query($conn, $sqlCusto);
+			$rowCusto = sqlsrv_fetch_array($queryCusto);
+
+			$calculo1 = (200*$rowCusto['custo'])/$rowCustoTotal['total'];
+			$margin1 = 205 - $calculo1;
+
+			if($calculo1 == 0 || empty($rowCusto['custo'])) {
+				$rowCusto['custo'] = 0;
+				$calculo1 = 1;
+				$margin1 = 204;
+			}
+
+
+			$sqlCusto = "SELECT sum(custo) AS custo FROM pw_custos_fases WHERE id_fase = '".$rowFase['id']."' AND type = 2";
+			$queryCusto = sqlsrv_query($conn, $sqlCusto);
+			$rowCusto2 = sqlsrv_fetch_array($queryCusto);
+
+			$calculo2 = (200*$rowCusto2['custo'])/$rowCustoTotal['total'];
+			$margin2 = 205 - $calculo2;
+
+			if($calculo2 == 0 || empty($rowCusto2['custo'])) {
+				$rowCusto2['custo'] = 0;
+				$calculo2 = 1;
+				$margin2 = 204;
+			}
+
+			$sqlHora = "SELECT SUM(horas) as horas, type FROM pw_horas_fases WHERE id_fase = '".$rowFase['id']."' GROUP BY type ORDER BY type";
+			$queryHora = sqlsrv_query($conn, $sqlHora);
+			$rowHora = sqlsrv_fetch_array($queryHora);
+			$rowHora2 = sqlsrv_fetch_array($queryHora);
+
+			$calculo3 = (200*$rowHora['horas'])/$rowHorasTotal['total'];
+			$margin3 = 205 - $calculo3;
+
+			if($calculo3 == 0) {
+				$rowHora['horas'] = 0;
+				$calculo3 = 1;
+				$margin3 = 204;
+			}
+
+			$rowHoras2 = sqlsrv_fetch_array($queryHoras);
+
+			$calculo4 = (200*$rowHora2['horas'])/$rowHorasTotal['total'];
+			$margin4 = 205 - $calculo4;
+
+			if($calculo4 == 0) {
+				$rowHora2['horas'] = 0;
+				$calculo4 = 1;
+				$margin4 = 204;
+			}
+
+    	?><a class="fase" href="<?=$lnk;?>projetos/<?=$hierarquia[1];?>/fase/<?=$total;?>">
+    	<div title="Previsto: R$ <?=$rowCusto['custo']?>,00" style="height: <?=$calculo1?>px; margin-top: <?=$margin1?>px" class="custoPrevisto"></div><div title="Realizado: R$ <?=$rowCusto2['custo']?>,00" style="height: <?=$calculo2?>px; margin-top: <?=$margin2?>px"  class="custoRealizado"></div><div title="Previsto: <?=$rowHora['horas']?> Horas" style="height: <?=$calculo3?>px; margin-top: <?=$margin3?>px" class="horaPrevisto"></div><div title="Realizado: <?=$rowHora2['horas']?> Horas" style="height: <?=$calculo4?>px; margin-top: <?=$margin4?>px"  class="horaRealizado"></div>
+
+    	<div class="cobrir"><h4>Custos</h4>
+    	<p>P: R$ <?=$rowCusto['custo']?>,00</p>
+    	<p>R: R$ <?=$rowCusto2['custo']?>,00</p>
+    	<h4 title="HorasxHomem">HxH</h4>
+    	<p>P: <?=$rowHora['horas']?> Horas</p>
+    	<p>R: <?=$rowHora2['horas']?> Horas</p>
+    	</div>
+    	</a><?php } 
+        if($total == 0) $total = 1;
+
+        $porcentagem = 100/$total;
+
+    	?>
+    	<style>
+    	.fase {
+		    width: <?=$porcentagem;?>%;
+		}
+    	</style>
+    </div>
+    <a id="maskFases" href="<?=$lnk;?>projetos/editar/<?=$row['id']?>"><img class="iconeCancel" id="icon1" src="<?=$lnk;?>img/cancel.png"><img class="iconeCancel" id="icon2" src="<?=$lnk;?>img/add.png"><span class="sem">Sem Dados</span><span class="add">Adicionar</span></a>
+</div>
+
+<h2 class="meio">Equipe do Projeto</h2>
+
+<?php 
+
+$sqlResp = "SELECT * FROM pw_usuarios WHERE id = '".$row['idResponsavel']."'";
+$queryResp = sqlsrv_query($conn, $sqlResp);
+$rowResp = sqlsrv_fetch_array($queryResp);
+
+?><a href="<?=$lnk;?>usuarios/<?=$row['idResponsavel']?>" class="grid usuario" target="_blank">
+
+<div class="imagemUsuario"></div>
+
+<div class="nomeUsuario"><?=$rowResp['nome']?></div>
+
+</a><?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_times_projetos WHERE id_projeto = '".$row['id']."'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row1 = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT * FROM pw_times_projetos WHERE id_projeto = '".$row['id']."'";
+$query2 = sqlsrv_query($conn, $sql2);
+
+if($row1['QTDE'] == 0) echo "<a class='grid usuario' id='semTime'><div class='imagemUsuario'></div>Sem Time</a>";
+
+for($i = 0; $i < $row1['QTDE'];$i++) {
+
+$row2 = sqlsrv_fetch_array($query2);
+
+$sql3 = "SELECT * FROM pw_usuarios WHERE id = '".$row2['id_usuario']."'";
+$query3 = sqlsrv_query($conn, $sql3);
+$row3 = sqlsrv_fetch_array($query3);
+
+?><a href="<?=$lnk;?>usuarios/<?=$row3['id']?>" class="grid usuario" target="_blank">
+
+<div class="imagemUsuario"></div>
+
+<div class="nomeUsuario"><?=$row3['nome']?></div>
+
+</a><?php }
+
+if($i > 0) echo "<a class='grid usuario' href='".$_SERVER['REQUEST_URI']."/equipe' id='addTime'><div class='imagemUsuario'></div>Adicionar</a>";
+
+ ?>
+
+<h2 class="meio">Documentos e Formulários</h2>
+
+<div class="documentosProjeto"></div><div class="documentosProjeto"></div><div class="documentosProjeto"></div>
+
+<h2 class="meio">Dados Gerais</h2>
+
+<div class="item">
+	<span class="tituloItem">Nome</span><span class="valorItem"><?=$row['nome']?></span>
+</div><div class="item">
+	<span class="tituloItem">Nome</span><span class="valorItem"><?=$row['nome']?></span>
+</div><div class="item">
+	<span class="tituloItem">Nome</span><span class="valorItem"><?=$row['nome']?></span>
+</div><div class="item">
+	<span class="tituloItem">Nome</span><span class="valorItem"><?=$row['nome']?></span>
+</div><div class="item duplo">
+	<span class="tituloItem">Nome</span><span class="valorItem"><?=$row['nome']?></span>
+</div><div class="item triplo">
+	<span class="tituloItem">Nome</span><span class="valorItem"><?=$row['nome']?></span>
+</div>
+
+</div>
+
+
+<?php } else if($hierarquia[2] == "fase") {
+
+
+    	$sql3 = "SELECT * FROM pw_fases_projetos WHERE id_projeto = '".$hierarquia[1]."'";
+		$query3 = sqlsrv_query($conn, $sql3);
+		for($x = 0; $x < $hierarquia[3]; $x++) $row3 = sqlsrv_fetch_array($query3);
+
+
+?><div id="breadcrumbs"><a href="<?=$lnk;?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos">Projetos</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/<?=$row['id']?>"><?=$row['nome']?></a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/<?=$row['id']?>/fase/<?=$hierarquia[3];?>">Fase <?=$hierarquia[3];?></a></div>
+
+<h1 id="tituloPagina">Projetos | <?=$row['nome']?> | Fase <?=$hierarquia[3];?><a id="botaoAdd" class="editar" href="<?=$lnk;?>projetos/editar/<?=$row['id']?>"><span>Editar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<div class="item">
+	<span class="tituloItem">Nome da Fase</span><span class="valorItem"><?=$row['nome']?></span>
+</div><div class="item">
+	<span class="tituloItem">Início Previsto</span><span class="valorItem"><?=$row['nome']?></span>
+</div><div class="item">
+	<span class="tituloItem">Final Previsto</span><span class="valorItem"><?=$row['nome']?></span>
+</div>
+
+
+    <h2>Linha do Tempo da Fase</h2>
+    <div id="graficoFase">
+  
+   	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="<?=$lnk;?>node_modules/chart.js/dist/Chart.bundle.js"></script>
+    <style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    body {
+        margin: 0px;
+    }
+    </style>
+
+    <?php if(!empty($row3['dataInicialPrevista'])) echo $row3['dataInicialPrevista']->format('d/m/Y'); ?>
+    <?php if(!empty($row3['dataFinalPrevista'])) echo $row3['dataFinalPrevista']->format('d/m/Y'); ?>
+
+    <?php 
+
+
+   	$sql4 = "SELECT * FROM pw_horas_fases WHERE id_fase = '".$row3['id']."' AND type = 2 ORDER BY data";
+	$query4 = sqlsrv_query($conn, $sql4);
+
+
+   	$sqlReal = "SELECT * FROM pw_horas_fases WHERE id_fase = '".$row3['id']."' AND type = 1";
+	$queryReal = sqlsrv_query($conn, $sqlReal);
+	$rowReal = sqlsrv_fetch_array($queryReal);
+
+	//echo $sql4;
+
+	$contador = 0;
+	
+	while($row42 = sqlsrv_fetch_array($query4)) {
+		if($contador == 0) {
+			$realizadas = $row42['horas'];
+			$label = $contador;
+		}
+
+		else {
+			$realizadas .= ", ".$row42['horas'];
+			$label .= ", ".$contador;
+		}
+		$contador++;
+	}
+
+	$valorReal = $rowReal['horas']/$contador;
+
+	for($x = 0; $x < $contador; $x++) {
+		if($x == 0) $prevista = $valorReal;
+		else $prevista .= ", ".$valorReal;
+	}
+
+
+
+	//echo $realizadas;
+
+    ?>
+
+    <div style="width: 100%">
+        <canvas id="canvas"></canvas>
+    </div>
+    
+    <script>
+        var randomScalingFactor = function() {
+            return (Math.random() > 0.5 ? 1.0 : 1.0) * Math.round(Math.random() * 80);
+        };
+
+        var barChartData = {
+            labels: [<?=$label; ?>],
+            datasets: [{
+                type: 'line',
+                label: 'Horas Planejadas',
+                backgroundColor: "rgba(82,161,176,0.5)",
+                data: [<?=$prevista; ?>],
+                borderColor: 'white',
+                borderWidth: 2
+            }, {
+                type: 'line',
+                label: 'Horas Realizadas',
+                backgroundColor: "rgba(58,173,103,0.5)",
+                data: [<?=$realizadas; ?>],
+                borderColor: 'white',
+                borderWidth: 2
+            },  ]
+
+        };
+        window.onload = function() {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myBar = new Chart(ctx, {
+                type: 'line',
+                data: barChartData,
+                options: {
+                    responsive: true,
+                    title: {
+                        display: false,
+                        text: 'Chart.js Combo Bar Line Chart'
+                    }
+                }
+            });
+        };
+    </script>
+
+    </div>
+
+    <h2 class="meio">HorasxHomem da Fase</h2>
+    <div id="graficoHorasHomem">
+
+    <?php
+		//echo $sql3;
+
+    	$sql4 = "SELECT sum(horas) AS horas FROM pw_horas_fases WHERE id_fase = '".$row3['id']."' AND type = 1";
+		$query4 = sqlsrv_query($conn, $sql4);
+		$row4 = sqlsrv_fetch_array($query4);
+
+    	$sql4 = "SELECT sum(horas) AS horas FROM pw_horas_fases WHERE id_fase = '".$row3['id']."' AND type = 2";
+		$query4 = sqlsrv_query($conn, $sql4);
+		$row42 = sqlsrv_fetch_array($query4);
+
+		if(empty($row4['horas'])) { 
+			echo "<p id='semResultadosHoras'>Nenhuma HoraxHomem Cadastrada!<a onclick='abrirForm(1)'><span>Adicionar Previsão</span></a></p>";
+
+			?>
+
+			<script>
+
+			function abrirForm(cod) {
+				$("#semResultadosHoras").fadeOut(700, function() {
+					$("#inserirHoras").fadeIn();
+				});
+			}
+
+			</script>
+
+			<div id="inserirHoras">
+
+			<form action="<?=$lnk;?>projetos" method="post">
+			<input type="hidden" name="url" value="<?php echo "http://lanpiasoa".$_SERVER['REQUEST_URI'];?>">
+			<input type="hidden" name="addHorasFase" value="<?=$row3['id']?>">
+
+			<label>HorasxHomem Previstas<input placeholder="Apenas Números" type="text" class="numero" required name="horasHomemFase" id="horasHomemFase"></label>
+
+			<input type="submit" value="Salvar" style="margin: 16px auto;">
+			</form>
+			</div>
+
+		<?php } else {
+
+			if(empty($row42['horas'])) $row42['horas'] = 0;
+
+			if($row4['horas'] > $row42['horas']) {
+				$valor1 = 74;
+				$valor2 = (80*$row42['horas'])/$row4['horas'];
+				$margin1 = 3;
+
+				if($valor2 <= 6) {
+				    $margin2 = $valor2/2; 
+					$valor2 = 0;					
+				}
+
+				else {
+					$margin2 = 3;
+					$valor2 = $valor2-6;
+				}
+			}
+
+			else {
+				$valor2 = 74;
+				$valor1 = (80*$row4['horas'])/$row42['horas'];
+				$margin2 = 3;
+
+				if($valor1 <= 6) {
+				    $margin1 = $valor1/2; 
+					$valor1 = 0;					
+				}
+
+				else {
+					$margin1 = 3;
+					$valor1 = $valor1-6;
+				}
+			}
+
+    	?>
+
+    	<script>
+
+    	$(document).ready(function() {
+    		document.getElementById('hxhPrevistas').style.padding = "25px <?=$margin1;?>%";
+    		document.getElementById('hxhRealizadas').style.padding = "25px <?=$margin2;?>%";
+    		document.getElementById('hxhPrevistas').style.width = "<?=$valor1?>%";
+    		document.getElementById('hxhRealizadas').style.width = "<?=$valor2?>%";
+    		if(<?=$valor2?> < 7) { 
+    			document.getElementById('hxhRealizadas').style.color = "transparent";
+    			document.getElementById('hxhRealizadas').style.fontSize = "1px";
+    		}
+
+    		if(<?=$valor2;?> > <?=$valor1;?>) {
+    			document.getElementById('hxhRealizadas').style.background = "url(../../../img/fundoExclusao.jpg)";    
+    			document.getElementById('hxhPrevistas').style.background = "url(../../../img/texturaCinza.jpg)";    			
+    		} 
+
+    	});
+
+    	</script>
+
+    <h5>Previstas</h5><div id="hxhPrevistas"><?=$row4['horas'];?> Horas</div>
+
+    <div><h5>Realizadas</h5><div id="hxhRealizadas"><?=$row42['horas'];?> Horas</div></div>
+
+    <a class="abrirLista" id="abrirLista" onmousedown="abrirLista()">Lista de Horas Realizadas<span class="botaoFechar" onmouseup="fecharLista()">X</span></a>
+
+
+    <div id="listaHorasRealizadas">
+
+
+    <div class="listaHoras">
+    <span class='dataoHoras'>Data Efetiva</span><span class='numeroHoras'>Quantidade de HorasxHomem</span>
+    </div><?php 
+
+   	$sql4 = "SELECT * FROM pw_horas_fases WHERE id_fase = '".$row3['id']."' AND type = 2 ORDER BY data";
+	$query4 = sqlsrv_query($conn, $sql4);
+
+	//echo $sql4;
+
+	$contador = 0;
+	
+	while($row42 = sqlsrv_fetch_array($query4)) {
+
+		$contador++;
+
+    ?><div class="listaHoras">
+    <span class='dataoHoras'><?php if(!empty($row42['data'])) echo $row42['data']->format('d/m/Y'); else echo "Não Informada"; ?></span><span class='numeroHoras'><?=$row42['horas'];?> Horas</span>
+    </div><?php } 
+
+    if($contador == 0) echo "<p>Nenhuma Hora foi Realizada.</p>";
+
+    ?>
+
+    
+
+    <div class="listaHoras"><form id="adicionarHoraRealizada" method="post" action="<?php echo "http://lanpiasoa".$_SERVER['REQUEST_URI'];?>">
+    <input type="hidden" name="url" value="<?php echo "http://lanpiasoa".$_SERVER['REQUEST_URI'];?>">
+    <input type="hidden" name="addHoraRealizada" value="<?=$row3['id']?>">
+
+    <label>Data Efetiva<input name="dataRealizada" class="data" id="dataRealizada" type="text" required></label>
+    <label>Quantidade de Horas<input name="horaRealizada" type="text" required></label>
+    <input type="submit" value="Adicionar">
+    </form></div>
+
+    </div>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+	<script>
+	  $( function() {
+	 
+	 $(".data").datepicker({
+	    dateFormat: 'dd/mm/yy',
+	    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+	    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+	    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+	    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+	    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+	    nextText: 'Próximo',
+	    prevText: 'Anterior'
+	});
+
+
+	    $( "#dataRealizada" ).datepicker( "option", "maxDate", new Date() );
+	  } );
+
+
+	  </script>
+
+
+    <script>
+
+    var valor = 0;
+
+    $(document).ready(function() {
+    	$( "#listaHorasRealizadas" ).slideToggle("slow");
+    });
+
+    function abrirLista() {
+    	if(valor == 0) {
+    		document.getElementById("abrirLista").className = "abrirLista aberto";
+    		$( "#listaHorasRealizadas" ).slideToggle("slow");
+    	}
+    	valor = 1;
+    }
+
+    function fecharLista() {
+    	if(valor == 1) {
+    		document.getElementById("abrirLista").className = "abrirLista";
+    		$( "#listaHorasRealizadas" ).slideToggle("slow");
+    	}
+    	valor = 0;
+    }
+
+    </script>
+    <?php } ?>
+
+    </div>
+
+    <h2 class="meioMaior">Documentos da Fase</h2>
+    <p id='semResultados'>Nenhum Documento Encontrado!<a href='<?=$lnk."projetos/".$hierarquia[1]."/fase/".$hierarquia[3];?>/documentos/adicionar'><span>Anexar Documentos</span></a></p>
+
+
+</div>
+
+<?php	} else if($hierarquia[2] == "equipe") { ?><div id="breadcrumbs"><a href="<?=$lnk;?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos">Projetos</a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/<?=$row['id']?>"><?=$row['nome']?></a> <span class="separador">>></span> <a href="<?=$lnk;?>projetos/<?=$row['id']?>/equipe">Equipe do Projeto</a></div>
+
+<h1 id="tituloPagina">Projetos | <?=$row['nome']?> | Equipe do Projeto</h1>
+
+<div id="conteudoCinza">
+
+<h2>Equipe do Projeto</h2>
+
+<?php 
+
+$sqlResp = "SELECT * FROM pw_usuarios WHERE id = '".$row['idResponsavel']."'";
+$queryResp = sqlsrv_query($conn, $sqlResp);
+$rowResp = sqlsrv_fetch_array($queryResp);
+
+?><a class="grid usuario menor responsavel">
+
+<div class="imagemUsuario"></div>
+
+<div class="nomeUsuario"><?=$rowResp['nome']?></div>
+
+</a><?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_times_projetos WHERE id_projeto = '".$row['id']."'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row1 = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT * FROM pw_times_projetos WHERE id_projeto = '".$row['id']."'";
+$query2 = sqlsrv_query($conn, $sql2);
+
+if($row1['QTDE'] == 0) echo "<a class='grid usuario' id='semTime'><div class='imagemUsuario'></div>Sem Time</a>";
+
+for($i = 0; $i < $row1['QTDE'];$i++) {
+
+$row2 = sqlsrv_fetch_array($query2);
+
+$sql3 = "SELECT * FROM pw_usuarios WHERE id = '".$row2['id_usuario']."'";
+$query3 = sqlsrv_query($conn, $sql3);
+$row3 = sqlsrv_fetch_array($query3);
+
+?><a class="grid usuario menor" target="_blank">
+
+<div class="marcarExclusao">X</div>
+
+<div class="imagemUsuario"></div>
+
+<div class="nomeUsuario"><?=$row3['nome']?></div>
+
+</a><?php } ?>
+
+
+<input type="submit" id="excluirUsuEquipe" name="excluirUsuEquipe" value="Excluir da Equipe">
+
+<script>
+
+$(document).ready(function () {
+
+	$(".grid.menor").click(function () {
+		if(this.className == "grid usario menor selecionado") {
+			this.className = "grid usario menor";
+			var subs = document.getElementById('usuariosEquipe').value.replace($(this).data("user")+",", "");
+			document.getElementById('usuariosEquipe').value = subs;
+			document.getElementById('usuarioEscolhido'+$(this).data("login")).style.display = "none";
+		}
+
+		else if(this.href == "" && this.className != "grid usuario menor responsavel"){
+			this.className = "grid usario menor selecionado";
+			document.getElementById('usuariosEquipe').value += $(this).data("user")+",";
+			document.getElementById('usuarioEscolhido'+$(this).data("login")).style.display = "inline-block";
+		}
+	});
+
+});
+</script>
+
+<form id="adicionarEquipe">
+
+<input name="usuariosEquipe" id="usuariosEquipe" type="hidden">
+
+
+<h2 class="meio">Adicionar à Equipe</h2>
+
+<?php 
+
+$sqlResp = "SELECT * FROM pw_usuarios WHERE id = '".$row['idResponsavel']."'";
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_usuarios";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row1 = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT * FROM pw_usuarios";
+$query2 = sqlsrv_query($conn, $sql2);
+
+
+for($i = 0; $i < $row1['QTDE'];$i++) {
+$row3 = sqlsrv_fetch_array($query2);
+
+$sqlVer = "SELECT COUNT(*) QTDE FROM pw_times_projetos WHERE id_usuario = '".$row3['id']."' AND id_projeto = '".$row['id']."'";
+$queryVer = sqlsrv_query($conn, $sqlVer);
+$rowVer = sqlsrv_fetch_array($queryVer);
+
+//echo $sqlVer;
+
+if($row3['id'] != $row['idResponsavel'] AND $rowVer['QTDE'] == 0) {
+
+?><a class="grid usuario menor" data-user="<?=$row3['id'];?>" data-login="<?=$row3['login'];?>">
+
+<div class="imagemUsuario"></div>
+
+<div class="nomeUsuario"><?=$row3['nome']?></div>
+</a><?php } } ?>
+
+<input type="submit" id="enviarNovaEquipe" name="enviarNovaEquipe" value="Adicionar à Equipe">
+
+<?php } } } ?>

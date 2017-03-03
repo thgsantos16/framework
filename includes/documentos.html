@@ -1,0 +1,36 @@
+<?php
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>documentos">Documentos</a></div>
+
+<h1 id="tituloPagina">DOCUMENTOS<a id="botaoAdd" href="documentos/adicionar">+<span>Adicionar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_documentos WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT * FROM pw_documentos WHERE status = '1'";
+$query2 = sqlsrv_query($conn, $sql2);
+
+if($row['QTDE'] == 0) echo "<p id='semResultados'>Nenhum Documento Encontrado!<a href='documentos/adicionar'><span>Adicionar o Primeiro</span></a></p>";
+
+for($i = 0; $i < $row['QTDE'];$i++) {
+
+$row2 = sqlsrv_fetch_array($query2);
+
+?><a href="documentos/<?=$row2['id']?>" class="list documento">
+
+
+<div class="nomeDocumento"><?=$row2['nome']?></div>
+
+</a><?php 
+
+}
+
+?>
+
+</div>

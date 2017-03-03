@@ -1,0 +1,1513 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+body {
+	font-family: calibri;
+	font-size: 18px;
+	color: #525252;
+}
+
+
+div#login {
+    background: url(../img/fundoLogin.jpg);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+}
+
+div#janelaLogin {
+    width: 40%;
+    max-width: 250px;
+    background: rgba(256,256,256,0.97);
+    padding: 34px 5%;
+    text-align: center;
+    margin: 52px auto 0;
+    box-shadow: 1px 1px 7px rgba(0,0,0,0.43);
+}
+
+div#janelaLogin img {
+    width: 90%;
+    margin-bottom: 16px;
+}
+
+div#janelaLogin input {
+    padding: 12px 16px;
+    width: 100%;
+    margin: 2px 0 16px;
+    border: 1px solid #CCC;
+}
+
+div#janelaLogin input[type="submit"] {
+    background: #44A3AD;
+    border: none;
+    color: #FFF;
+    padding: 12px;
+    cursor: pointer;
+}
+
+div#janelaLogin input[type="submit"]:hover {
+    background: #52B979;
+}
+
+header#cabecalho {
+    width: 100%;
+    height: 88px;
+    background: url(../img/fundoTop.jpg) center top;
+    position: fixed;
+    z-index: 9999;
+}
+
+a#logo img {
+    margin: 15px 0 0 20px;
+}
+
+div#lateral {
+    position: fixed;
+    width: 6%;
+    background: url(../img/texturaCinza.jpg);
+    height: 100%;
+    z-index: 9998;
+    padding-top: 90px;
+}
+
+
+div#conteudo {
+    padding: 115px 0 0 9%;
+    position: absolute;
+    width: 88%;
+    min-height: 250px;
+}
+
+.quadrosPrincipais {
+    display: inline-block;
+    background: #4DA49F url(../img/cobrir.png) center top;
+    width: 19.2%;
+    height: 160px;
+    margin-right: 1%;
+    border: 0;
+    vertical-align: top;
+    color: #FFF;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.quadrosPrincipais:hover {
+    opacity: 0.79;
+}
+
+
+.quadrosPrincipais:nth-child(2) {
+    background-color: #45A888;
+}
+
+.quadrosPrincipais:nth-child(3) {
+    background-color: #40AA79;
+}
+
+.quadrosPrincipais:nth-child(4) {
+    background-color: #5EB0A0
+}
+
+.quadrosPrincipais:nth-child(5) {
+    margin-right: 0;
+    background-color: #b75a5a;
+}
+
+h1 {
+    color: #FFF;
+    background: url(../img/texturaCinza.jpg);
+    margin: 16px 0;
+    padding: 16px 25px;
+    font-family: "Champagne & Limousines", 'Champagne';
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+div.grafico {
+    background: #EEE;
+    width: 49.5%;
+    margin-right: 1%;
+    height: 403px;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 12px;
+    box-shadow: 0px 0px 1px #777;
+}
+
+div.grafico:nth-child(even) {
+    margin-right: 0;
+}
+
+.quadrosPrincipais:after {
+    width: 90%;
+    height: 7px;
+    background: #FFF;
+    content: "";
+    margin-top: -16px;
+    display: inline-block;
+    margin-left: 5%;
+}
+
+div#profileDiv {
+    background: url(../img/texturaCinza.jpg);
+    display: inline-block;
+    float: right;
+    height: 56px;
+    padding: 16px 16px 16px 25px;
+    color: #FFF;
+}
+
+
+div#profileNome {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 25px;
+    margin-right: 7px;
+    font-family: "champagne & limousines", 'Champagne';
+    text-align: right;
+    padding-top: 6px;
+}
+
+span#profileSobrenome {
+    display: block;
+    font-size: 20px;
+}
+
+
+div#profileImg {
+    background: url(../img/profile.png);
+    display: inline-block;
+    height: 61px;
+    width: 61px;
+    color: #FFF;
+}
+
+.tituloQuadro {
+    font-size: 26px;
+    font-family: "champagne & limousines", 'Champagne';
+    padding: 10px;
+    min-height: 52px;
+}
+
+.descricaoQuadro {
+    padding: 10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    display: none;
+}
+
+.conteudoQuadro {
+    height: 160px;
+}
+
+.valorQuadro {
+    font-size: 70px;
+    font-family: "Champagne & Limousines", 'Champagne';
+    text-align: right;
+    padding: 0px 10px 0 0;
+}
+
+
+.tituloGrafico {
+    width: 90%;
+    padding: 12px 2%;
+    background: #777;
+    color: #FFF;
+    margin: 14px 3%;
+    font-size: 20px;
+    font-family: "Champagne & Limousines", 'Champagne';
+    letter-spacing: 2px;
+}
+
+a.menuLateral {
+    display: block;
+    width: 80%;
+    height: 43px;
+    margin: 7px 0 7px 10%;
+    background: center no-repeat;
+    background-size: 34px;
+    opacity: 0.7;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a.menuLateral:hover {
+    opacity: 1;
+}
+
+a#linkCategorias {
+    background-image: url(../img/linkCategorias.png);
+}
+
+a#linkCalendario {
+    background-image: url(../img/linkCalendario.png);
+}
+
+a#linkProjetos {
+    background-image: url(../img/linkProjetos.png);
+}
+
+a#linkDocumentos {
+    background-image: url(../img/linkDocumentos.png);
+}
+
+a#linkUsuarios {
+    background-image: url(../img/linkUsuarios.png);
+}
+
+a#linkGestao {
+    background-image: url(../img/linkGestao.png);
+}
+
+a#linkFinanceiro {
+    background-image: url(../img/linkFinanceiro.png);
+}
+
+a#linkConfiguracao {
+    background-image: url(../img/linkConfiguracao.png);
+}
+
+a#linkLogout {
+    background-image: url(../img/linkLogout.png);
+}
+
+
+
+p#erro404 {
+    text-align: center;
+    font-size: 160px;
+}
+
+p#erro404Texto {
+    text-align: center;
+    padding-top: 16px;
+}
+
+p#erro404:before {
+    content: "";
+    background: url(../img/404.jpg) no-repeat center;
+    height: 160px;
+    width: 20%;
+    display: block;
+    background-size: 88%;
+    margin-left: 40%;
+}
+
+
+
+#breadcrumbs a {
+    color: #4FA2A7;
+    font-size: 16px;
+}
+
+#breadcrumbs a:hover {
+    color: #40AA7A;
+    text-decoration: none;
+}
+
+span.separador {
+    color: #999;
+    letter-spacing: -3px;
+    margin: 0 7px;
+}
+
+
+div#conteudoCinza {
+    width: 94%;
+    padding: 34px 3%;
+    background: #EEE;
+    margin-bottom: 70px;
+}
+
+.nomeUsuario {
+    margin-top: 16px;
+}
+
+.grid {
+    width: 21%;
+    padding: 1%;
+    margin: 16px 1%;
+    display: inline-block;
+    background: #FFF;
+    min-height: 106px;
+    text-align: center;
+    color: #777;
+    vertical-align: top;
+    padding-bottom: 25px;
+    text-decoration: none;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.grid:hover {
+    box-shadow: 0px 0px 7px #52A1B0;
+    color: #52A1B0;
+}
+
+
+
+.grid:hover .imagemUsuario {
+    border: #52A1B0 solid 7px;
+}
+
+.imagemUsuario {
+    display: block;
+    margin: 7px auto;
+    width: 160px;
+    height: 160px;
+    background: #CCC url(../img/perfil.jpg);
+    border-radius: 100%;
+    background-size: cover;
+    border: #FFF solid 7px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a#botaoAdd {
+    color: #FFF;
+    text-decoration: none;
+    float: right;
+    font-size: 43px;
+    margin-top: -16px;
+    padding: 9px 20px 8px;
+    background: url(../img/fundoTop.jpg);
+    margin-right: -25px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a#botaoAdd:hover {
+    background-position: center top; 
+}
+
+a#botaoAdd:hover span {
+    width: 91px;
+    opacity: 1;
+}
+
+#botaoAdd span {
+    text-transform: capitalize;
+    font-size: 20px;
+    vertical-align: top;
+    padding-top: 12px;
+    display: inline-block;
+    overflow: hidden;
+    width: 0;
+    opacity: 0;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+p#semResultados, p#semResultadosHoras {
+    text-align: center;
+    color: #aaa;
+}
+
+
+p#semResultados a, a#botaoVoltar, p#semResultadosHoras a {
+    display: block;
+    width: 160px;
+    padding-top: 140px;
+    height: 20px;
+    background: #D7D7D7 url(../img/imagemAddFirst.png) center no-repeat;
+    margin: 25px auto;
+    border-radius: 100%;
+    text-decoration: none;
+    background-size: 151px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+p#semResultados a:hover, a#botaoVoltar:hover, p#semResultadosHoras a:hover {
+    background-color:  #52A1B0;
+    background-size: 187px;
+}
+
+
+a#botaoVoltar {
+    background-image: url(../img/imagemVoltar.png);
+}
+
+
+p#semResultados a:hover span, a#botaoVoltar:hover span, p#semResultadosHoras a:hover span {
+    opacity: 1;
+}
+
+p#semResultados span, a#botaoVoltar span, p#semResultadosHoras span {
+    background: #FFF;
+    color: #333;
+    width: 100%;
+    text-decoration: none;
+    padding: 12px 0px;
+    display: block;
+    font-size: 16px;
+    opacity: 0;
+    text-align: center;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.list {
+    width: 96%;
+    display: block;
+    background: #FFF;
+    padding: 16px 2%;
+    color: #777;
+    margin-bottom: 4px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.list a {
+    color: #777;
+    text-decoration: none;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.list:hover a {
+    color: #FFF;
+}
+
+.list a:hover {
+    text-decoration: underline;
+}
+
+.list:hover {
+    color: #FFF;
+    background: #999;
+}
+
+label {
+    display: inline-block;
+    width: 30%;
+    margin: 12px 1%;
+    color: #888;
+}
+
+label input[type="text"], label input[type="password"] {
+    width: 100%;
+    display: block;
+    margin-top: 7px;
+    border: #CCC 1px solid;
+    padding: 12px;
+    color: #777;
+}
+
+
+input[type="submit"] {
+    border: none;
+    background: url(../img/fundoTop.jpg);
+    color: #FFF;
+    margin-top: 7px;
+    padding: 16px 0;
+    text-align: center;
+    width: 30%;
+    display: block;
+    margin-left: 1%;
+    font-size: 20px;
+    font-family: calibri;
+    cursor: pointer;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+
+input[type="submit"]:hover {
+    background-position: right top;
+}
+
+#botaoAdd.editar {
+    background-image: url(../img/fundoEdicao.jpg);
+}
+
+a#botaoAdd.editar:before {
+    content: "";
+    background: url(../img/editar.png) center no-repeat;
+    width: 26px;
+    height: 43px;
+    display: inline-block;
+    background-size: contain;
+}
+
+a#botaoAdd.editar:hover span {
+    margin-left: 12px;
+    width: 70px;
+}
+
+.item {
+    display: inline-block;
+    width: 31.3%;
+    margin: 0 1% 16px;
+}
+
+.item.duplo {
+    width: 64.6%;
+    margin: 0 1% 16px;
+}
+
+.item.triplo {
+    width: 97.9%;
+}
+
+span.tituloItem {
+    display: block;
+    background: #CCC;
+    padding: 16px 0;
+    color: #777;
+    text-align: center;
+}
+
+span.valorItem {
+    padding: 16px 1.75%;
+    background: #FFF;
+    border: 1px solid #CCC;
+    color: #999;
+    display: block;
+    vertical-align: top;
+    text-align: center;
+}
+
+.menuList {
+    width: 34px;
+    height: 30px;
+    float: right;
+    margin-top: -23px;
+    cursor: pointer;
+}
+
+span.linha {
+    width: 34px;
+    height: 7px;
+    background: #999;
+    display: block;
+    margin-bottom: 3px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.ativo span.linha {
+    background: #4FA2A7;
+}
+
+.list:hover .ativo span.linha, .list:hover span.linha {
+    background: #FFF;
+}
+
+.ativo span.linha.linha1 {
+    transform: rotate(45deg);
+    margin-top: 10px;
+}
+
+.ativo span.linha.linha2 {
+    opacity: 0;
+}
+
+.ativo span.linha.linha3 {
+    transform: rotate(-45deg);
+    margin-top: -20px;
+}
+
+div#navegacaoInferior {
+    text-align: right;
+    margin: 34px 0 16px;
+}
+
+a#navegacaoVoltar, a#navegacaoExcluir {
+    padding: 16px 34px;
+    background: #777;
+    color: #FFF;
+    text-decoration: none;
+    margin-left: 7px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a#navegacaoVoltar:hover, a#navegacaoExcluir:hover {
+    background: #999 center top;
+}
+
+a#navegacaoExcluir, a#navegacaoExcluir:hover {
+    background-image: url(../img/fundoExclusao.jpg);
+}
+
+
+table {
+    width: 100%;
+    text-align: right;
+}
+
+div#conteudoCinza.calendario {
+    padding: 0;
+    width: 100%;
+    background: #DDD;
+}
+
+.calendario td {
+    width: 14.4%;
+    text-align: right;
+}
+
+a.diaCalendario {
+    color: #777;
+    text-decoration: none;
+    padding: 7px 12px;
+    display: inline-block;
+}
+
+tr.nomeDias td {
+    background: #333 url(../img/texturaCinza.jpg);
+    color: #FFF;
+    padding: 16px 0;
+    border: #FFF solid 1px;
+    text-align: center;
+}
+
+tr.nome_mes {
+    display: none;
+}
+
+
+td#dia_comum {
+    background: #EEE;
+    border: #CCC solid 1px;
+    height: 133px;
+}
+
+td#dia_branco {
+    background: #DDD;
+    border: #CCC solid 1px;
+    height: 133px;
+}
+
+td#dia_atual {
+    background: #48A691;
+    border: #CCC solid 1px;
+    height: 133px;
+}
+
+a.linkProjeto {
+    width: 22.25%;
+    color: #FFF;
+    padding: 22px 0 0 2%;
+    font-size: 25px;
+    height: 48px;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Champagne & Limousines", 'Champagne';
+    background: url(../img/fundoTop.jpg);
+    margin-right: 1%;
+    margin-bottom: 12px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a.linkProjeto:hover {
+    background: url(../img/fundoTop.jpg) right top;    
+}
+
+a#ordenarProjeto {
+    margin-right: 0;
+}
+
+
+.list.projeto a {
+    display: inline-block;
+    width: 31%;
+}
+
+.list.projeto .tc {
+    display: inline-block;
+    width: 7%;
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px 0;
+}
+
+.list.projeto.cabecalho .tc {
+    padding: 0;
+}
+
+.list.projeto.cabecalho {
+    background: #AAA;
+    color: #FFF;
+}
+
+.list.projeto.cabecalho a {
+    color: #FFF;
+}
+
+.list.projeto.cabecalho a:hover {
+    text-decoration: none;
+}
+
+.list.projeto .responsavel {
+    display: inline-block;
+    width: 26%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.list.projeto .dataInicialPrevista, .list.projeto .dataFinalPrevista {
+    display: inline-block;
+    width: 18%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.list.projeto .custo, .list.projeto .hxh {
+    display: inline-block;
+    width: 12%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.list.projeto .timeline {
+    display: inline-block;
+    width: 38%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+span.tcVisaoGeral {
+    float: right;
+    background: #999;
+    padding: 16px;
+    margin: -16px -16px -16px -43px;
+}
+
+.tc.critico,span.tcVisaoGeral.critico {
+    background-image: url(../img/fundoExclusao.jpg);
+    color: #FFF;
+    background-position: 16%;
+}
+
+.tc.alerta, span.tcVisaoGeral.alerta {
+    background-image: url(../img/fundoEdicao.jpg);
+    color: #FFF;
+    background-position: 32%;
+}
+
+#janelaLogin label {
+    width: 100%;
+    margin: 7px 0 0;
+}
+
+div#quadrantes {
+    width: 205px;
+    height: 205px;
+    background: #FFF;
+    border: 1px solid #BBB;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 43px;
+}
+
+.quadrante {
+    width: 50%;
+    height: 50%;
+    display: inline-block;
+    box-shadow: 0 0 1px rgba(0,0,0,0.34);
+}
+
+.circulo.vermelho {
+    width: 160px;
+    height: 160px;
+    background: #da381d;
+    margin-top: -182.5px;
+    margin-left: 22.5px;
+    border-radius: 100%;
+}
+
+.circulo.amarelo {
+    width: 115px;
+    height: 115px;
+    background: #ffd026;
+    margin-top: -137px;
+    margin-left: 46px;
+    border-radius: 100%;
+}
+
+.circulo.verde {
+    width: 70px;
+    height: 70px;
+    background: #42b942;
+    margin-top: -92.5px;
+    margin-left: 67.5px;
+    border-radius: 100%;
+}
+
+h2 {
+    background: #777;
+    padding: 16px;
+    text-align: center;
+    font-size: 22px;
+    color: #FFF;
+    margin-bottom: 16px;
+    font-family: "Champagne & Limousines", 'Champagne';
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+h2.meio {
+    margin-top: 16px;
+}
+
+h2.meioMaior {
+    margin-top: 52px;
+}
+
+
+h3 {
+    margin-top: -48px;
+    margin-bottom: 7px;
+    text-align: center;
+    background: #CCC;
+    padding: 10px;
+    border: #BBB 1px solid;
+}
+
+div#fasesProjeto {
+    padding-left: 214px;
+    margin-top: -254px;
+    height: 254px;
+}
+
+div#graficoFases {
+    width: 100%;
+    background: #FFF;
+    height: 205px;
+    border: 1px solid #B1B1B1;
+}
+
+a#maskQuadrantes, a#maskFases {
+    width: 205px;
+    height: 180px;
+    padding-top: 25px;
+    background: rgba(0,0,0,0.79);
+    margin-top: -138px;
+    color: #FFF;
+    text-align: center;
+    display: none;
+    text-decoration: none;
+    cursor: pointer;
+    z-index: 999;
+    position: relative;
+}
+
+a#maskFases {
+    margin-top: -206px;
+    width: 100%;
+    margin-left: 1px;
+}
+
+img.iconeCancel {
+    width: 106px;
+    display: block;
+    margin: 0px auto 7px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+img#icon2 {
+    margin-top: -112px;
+    opacity: 0;
+}
+
+span.sem, span.add {
+    display: block;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+span.add {
+    opacity: 0;
+    margin-top: -18px;
+}
+
+a#maskQuadrantes:hover #icon1, a#maskQuadrantes:hover span.sem, a#maskFases:hover #icon1, a#maskFases:hover span.sem {
+    opacity: 0;
+}
+
+a#maskQuadrantes:hover #icon2, a#maskQuadrantes:hover span.add, a#maskFases:hover #icon2, a#maskFases:hover span.add {
+    opacity: 1;
+}
+
+.fase {
+    width: 10%;
+    vertical-align: top;
+    overflow: hidden;
+    text-align: center;
+    height: 100%;
+    display: inline-block;
+    box-shadow: 0 0 1px rgba(0,0,0,0.34);
+}
+
+.documentosProjeto {
+    width: 18%;
+    height: 160px;
+    display: inline-block;
+    background: #FFF;
+    margin: 10px 0.9%;
+    border: 1px solid #CCC;
+}
+
+
+#addTime .imagemUsuario, #semTime .imagemUsuario {
+    background: url(../img/addUser.png) center no-repeat #F2F2F2;
+    background-size: 133px;
+    margin-bottom: 16px;
+}
+
+.custoPrevisto, .custoRealizado, .horaPrevisto, .horaRealizado {
+    margin: 0 2%;
+    width: 16%;
+    background: #333;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 20px
+    height: 0px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.custoPrevisto, .horaPrevisto {
+    background-image: url(../img/fundoTop.jpg);
+}
+
+.custoPrevisto:hover, .horaPrevisto:hover {
+    background-position: right top;
+}
+
+
+a#botaoSim, a#botaoNao {
+    padding: 16px 88px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 25px 16px 0 0;
+    background: url(../img/fundoTop.jpg);
+    text-decoration: none;
+    cursor: pointer;
+    color: #FFF;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a#botaoNao {
+    background-image: url(../img/fundoExclusao.jpg);
+    padding: 16px 52px;
+}
+
+a#botaoSim:hover, a#botaoNao:hover {
+    background-position: right top;
+}
+
+span.grifado {
+    color: #222;
+    font-weight: bold;
+}
+
+select, #pergunta5 input {
+    background-color: #999;
+    color: #FFF;
+    padding: 16px 52px 16px 16px;
+    margin: 25px 16px 0 0;
+    font-size: 16px;
+    border: none;
+}
+
+option {
+    font-size: 16px;
+}
+
+.grid.menor {
+    width: 16%;
+    cursor: pointer;
+}
+
+.menor .imagemUsuario {
+    width: 106px;
+    height: 106px;
+}
+
+
+.grid.menor.selecionado, .grid.menor.selecionado:hover .imagemUsuario {
+    background-color: #52A1B0;
+    color: #FFF;
+    border-color: #FFF;
+}
+
+.grid.menor.selecionado.deletar {
+    background-color: #ce2b33;
+    border-color: #ce2b33;
+}
+
+span#avisoEquipe, span#avisoFases {
+    background: #999;
+    color: #EEE;
+    padding: 16px 25px;
+    display: inline-block;
+    margin-top: 25px;
+    margin-left: -16px;
+    opacity: 0;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+span#avisoFases {
+    margin: 12px 0px;
+}
+
+div#eixoX {
+    background: #777;
+    width: 52px;
+    height: 100%;
+    display: inline-block;
+}
+
+div#ladoB {
+    height: 100%;
+    position: relative;
+    display: block;
+    padding-left: 52px;
+    margin-top: -403px;
+}
+
+div#eixoY {
+    width: 100%;
+    height: 41px;
+    color: #777;
+    background-color: #FFF;
+    text-align: center;
+    padding-top: 20px;
+}
+
+div#graficoFase {
+    width: 100%;
+    background: transparent;
+    border-bottom: 3px solid #777;
+}
+
+
+a.menuLateral span {
+    background: #444;
+    color: #FFF;
+    text-decoration: none;
+    padding: 12px 0;
+    margin-left: 113%;
+    display: inline-block;
+    width: 0;
+    text-align: center;
+    overflow: hidden;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a.menuLateral:hover span {
+    padding: 12px;
+    width: 106px;
+    overflow: hidden;
+}
+
+#inserirHoras {
+    text-align: center;
+    display: none;
+}
+
+.cobrir {
+    width: 100%;
+    height: 205px;
+    margin-top: 0px;
+    background: rgba(0,0,0,0.7);
+    z-index: 999;
+    position: relative;
+    color: #FFF;
+    padding-top: 16px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a:hover .cobrir {
+    margin-top: -205px;
+}
+
+.cobrir h4 {
+    font-size: 20px;
+    margin: 16px 0 7px;
+    text-decoration: none;
+}
+
+div#hxhPrevistas, div#hxhRealizadas {
+    background: #333 url(../img/texturaCinza.jpg);
+    margin: 0 0 25px;
+    padding: 25px 0%;
+    color: #FFF;
+    display: inline-block;
+    width: 0%;
+    overflow: hidden;
+    min-height: 18px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+div#hxhPrevistas {
+    background: url(../img/fundoTop.jpg);
+}
+
+h5 {
+    background: #DDD;
+    text-align: center;
+    margin-bottom: -24px;
+    padding: 25px 3%;
+    display: inline-block;
+    width: 14%;
+    vertical-align: top;
+}
+
+a.abrirLista {
+    display: block;
+    width: 30%;
+    padding: 2%;
+    background: url(../img/fundoTop.jpg);
+    color: #FFF;
+    text-align: center;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a.abrirLista span {
+    width: 0px;
+    overflow: hidden;
+    display: inline-block;
+    float: right;
+    margin-right: -2%;
+    margin-left: -8%;
+    padding: 2% 0;
+    margin-top: -2%;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+a#abrirLista.aberto {
+    background: url(../img/texturaCinza.jpg);
+    width: 96%;
+    cursor: auto;
+}
+
+a#abrirLista.aberto span {
+    width: 10%;
+    background: rgba(256,256,256,0.25);
+    cursor: pointer;
+}
+
+a#abrirLista.aberto span:hover {
+    background: rgba(256,256,256,0.43);
+}
+
+div#listaHorasRealizadas {
+    height: auto;
+    overflow: hidden;
+    padding: 1.6%;
+    background: #FFF;
+}
+
+
+div#listaHorasRealizadas .listaHoras:nth-child(odd) {
+    background: #DDD;
+}
+
+div#listaHorasRealizadas .listaHoras {
+    padding: 1.6%;
+    text-align: center;
+}
+
+.listaHoras span {
+    width: 50%;
+    display: inline-block;
+    text-align: left;
+}
+
+div#listaHorasRealizadas .listaHoras:first-child {
+    background: #777;
+    color: #FFF;
+}
+
+#listaHorasRealizadas p {
+    padding: 25px;
+    text-align: center;
+}
+
+#listaHorasRealizadas input[type="submit"] {
+    display: inline-block;
+}
+
+iframe {
+    width: 100%;
+    height: 565px;
+}
+
+.marcarExclusao {
+    background: #FFF;
+    border-radius: 100%;
+    float: right;
+    margin-top: -25px;
+    width: 30px;
+    padding: 6px 0;
+    margin-right: -25px;
+    color: #333;
+    display: none;
+    opacity: 0;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+.selecionado .marcarExclusao {
+    display: block;
+    opacity: 1;
+}
+
+.grid.responsavel {
+    color: #252525;
+}
+
+.grid.responsavel:hover {
+    background: #e8e690;
+    box-shadow: 0px 0px 7px rgba(0,0,0,0.7);
+}
+
+.grid.responsavel:hover .imagemUsuario {
+    border-color: #d7d57F;
+}
+
+input#excluirUsuEquipe {
+    background-image: url(../img/fundoExclusao.jpg);
+}
+
+#pergunta6 p span {
+    color: #37A;
+}
+
+#pergunta6 p span.tituloDetalhes {
+    color: #434343;
+}
+
+div#timeUsuario {
+    width: 70%;
+    display: inline-block;
+    min-height: 100px;
+    vertical-align: top;
+}
+
+div#colunaRight {
+    width: 25%;
+    display: inline-block;
+    min-height: 100px;
+    margin-left: 5%;
+    vertical-align: top;
+    background: #AAA;
+}
+
+div#imagemPerfil {
+    width: 187px;
+    height: 187px;
+    border: #FFF 7px solid;
+    border-radius: 100%;
+    background: url(../img/perfil.jpg);
+    margin: 25px auto;
+    overflow: hidden;
+}
+
+#imagemPerfil a {
+    background: rgba(255,255,255,0.79);
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 16px 0;
+    margin-top: 190px;
+    transition: all 0.52s;
+    -moz-transition: all 0.52s;
+    -o-transition: all 0.52s;
+    -webkit-transition: all 0.52s;
+}
+
+#imagemPerfil:hover a {
+    margin-top: 79px;
+}
+
+#imagemPerfil a:before {
+    content: "";
+    display: block;
+    width: 61px;
+    height: 61px;
+    margin: -7px auto 7px;
+    background: url(../img/camera.png);
+}
+
+#dadosUsuario span {
+    display: block;
+    margin: 7px auto;
+    width: 100%;
+    text-align: center;
+    color: #FFF;
+}
+
+span#nomeUsuario {
+    font-size: 20px;
+    background: rgba(0,0,0,.16);
+    width: 80%;
+    padding: 10px 0 12px;
+}
+
+div#divNovaImagem {
+    width: 700px;
+    height: 400px;
+    position: absolute;
+    z-index: 99999;
+    background: #FFF;
+    display: none;
+    top: 50%;
+    left: 50%;
+    margin-top: -200px;
+    margin-left: -350px;
+    border: 1px solid #CCC;
+}
+
+div#sombraBranca {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 99998;
+    background: rgba(255,255,255,0.7);
+    display: none;
+    top: 0;
+    left: 0;
+}
+
+a.diaCalendario.hoje {
+    color: #FFF;
+}
+
+td#dia_atual:after {
+    content: "HOJE";
+    position: absolute;
+    margin-left: -118px;
+    margin-top: 73px;
+    float: right;
+    margin-right: 10px;
+    color: #FFF;
+    font-size: 52px;
+    opacity: 0.16;
+}
+
+
+
+@font-face {
+    font-family: 'Champagne';
+    src: url('../fontes/champagne__limousines-webfont.eot');
+    src: url('../fontes/champagne__limousines-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fontes/champagne__limousines-webfont.woff') format('woff'),
+        url('../fontes/champagne__limousines-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

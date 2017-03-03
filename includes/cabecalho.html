@@ -1,0 +1,42 @@
+<?php
+
+// Página de Cabeçalho Padrão
+
+// Separa o Nome do Usuário Logado
+$dividir = explode(" ", $_SESSION['loginNome']);
+$primeiroNome = $dividir[0]; // Primeiro Nome
+$ultimoNome = $dividir[count($dividir)-1]; // Último Nome
+
+?>
+
+<header id="cabecalho">
+
+<a  id="logo" href="<?=$lnk;?>"><img src="<?=$lnk;?>img/logo2.png"></a>
+
+
+<div id="profileDiv">
+	
+
+<div id="profileNome"><?=$primeiroNome;?><span id="profileSobrenome"><?=$ultimoNome;?></span></div>
+<div id="profileImg"></div>
+
+</div>
+
+
+</header>
+
+
+<div id="lateral">
+
+<a href="<?=$lnk;?>categorias" class="menuLateral" id="linkCategorias"><span>Categorias</span></a>
+<a href="<?=$lnk;?>calendario" class="menuLateral" id="linkCalendario"><span>Calendário</span></a>
+<a href="<?=$lnk;?>projetos" class="menuLateral" id="linkProjetos"><span>Projetos</span></a>
+<a href="<?=$lnk;?>documentos" class="menuLateral" id="linkDocumentos"><span>Documentos</span></a>
+<a href="<?=$lnk;?>usuarios" class="menuLateral" id="linkUsuarios"><span>Usuários</span></a>
+<a href="<?=$lnk;?>gestao" class="menuLateral" id="linkGestao"><span>Gestão</span></a>
+<a href="<?=$lnk;?>financeiro" class="menuLateral" id="linkFinanceiro"><span>Financeiro</span></a>
+<a href="<?=$lnk;?>configuracao" class="menuLateral" id="linkConfiguracao"><span>Configuração</span></a>
+<a href="<?=$lnk;?>logout.php" class="menuLateral" id="linkLogout"><span>Logout</span></a>
+
+</div>
+

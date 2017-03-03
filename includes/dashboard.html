@@ -1,0 +1,92 @@
+<div id="dashboard">
+
+<div class="quadrosPrincipais">
+<a href="projetos">
+<div class="conteudoQuadro"><div class="tituloQuadro">Projetos Abertos</div>
+<div class="descricaoQuadro">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_projetos WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+?><div class="valorQuadro"><?=$row["QTDE"];?></div>
+</div></a>
+	
+</div><div class="quadrosPrincipais">
+
+<div class="conteudoQuadro"><div class="tituloQuadro">Tarefas Pendentes</div>
+<div class="descricaoQuadro">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_tarefas WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+?><div class="valorQuadro"><?=$row["QTDE"];?></div>
+</div>
+	
+</div><div class="quadrosPrincipais">
+<a href="documentos">
+<div class="conteudoQuadro"><div class="tituloQuadro">Documentos</div>
+<div class="descricaoQuadro">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_documentos WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+?><div class="valorQuadro"><?=$row["QTDE"];?></div>
+</div></a>
+	
+</div><div class="quadrosPrincipais">
+<a href="usuarios">
+<div class="conteudoQuadro"><div class="tituloQuadro">Usuários Ativos</div>
+<div class="descricaoQuadro">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_usuarios WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+?><div class="valorQuadro"><?=$row["QTDE"];?></div>
+</div></a>
+	
+</div><div class="quadrosPrincipais">
+
+<div class="conteudoQuadro"><div class="tituloQuadro">Tarefas Atrasadas</div>
+<div class="descricaoQuadro">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_tarefas WHERE status > '3'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+?><div class="valorQuadro"><?=$row["QTDE"];?></div>
+</div>
+	
+</div>
+
+<h1>Dashboard</h1>
+
+<div id="graficos">
+
+<?php for($x = 1; $x < 7; $x++) { ?><div id="grafico<?php echo $x; ?>" class="grafico">
+	
+<div class="tituloGrafico">Título <a class="config"></a></div>
+
+
+<div class="conteudoGrafico"></div>
+
+</div><?php } ?>
+
+</div>
+
+
+</div>
+

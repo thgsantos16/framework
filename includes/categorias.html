@@ -1,0 +1,160 @@
+<?php
+
+// Página de Gerencimanento de Categorias
+
+if($_POST['acao']) { // Verifica se algum formulário foi setado
+	if($_POST['acao'] == "adicionar") { // Verfiica se o métdo é ADICIONAR
+
+		// Prpara o SQL para Inserção de Titem
+		$sql = "INSERT INTO pw_categorias (nome, status) VALUES ('".$_POST['nome']."', '".$_POST['ativo']."')";
+		$query = sqlsrv_query($conn, $sql); // Executa a QUery Preparada
+
+		if($query) {
+			echo '<h1 id="tituloPagina">Inserido com Sucesso!</h1>
+
+	<div id="conteudoCinza">';
+			echo "<a href='categorias' id='botaoVoltar'><span>Voltar</span></a>";
+			echo "</div>";
+		}
+	}
+
+	if($_POST['acao'] == "editar") {
+		$sql = "UPDATE pw_categorias SET nome = '".$_POST['nome']."', status = '".$_POST['ativo']."' WHERE id = '".$_POST['idCategoria']."'";
+		$query = sqlsrv_query($conn, $sql);
+
+		if($query) {
+			echo '<h1 id="tituloPagina">Editado com Sucesso!</h1>
+
+	<div id="conteudoCinza">';
+			echo "<a href='categorias' id='botaoVoltar'><span>Voltar</span></a>";
+			echo "</div>";
+		}
+	}
+}
+
+else {
+
+$hierarquia = explode("/", $url); // $hierarquia é a Variável que recebe as Páginas Filhas
+
+
+if(!isset($hierarquia[1])) { // Verifica se NÃO possui Páginas Filhas
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>categorias">Categorias</a></div>
+
+<h1 id="tituloPagina">CATEGORIAS<a id="botaoAdd" href="categorias/adicionar">+<span>Adicionar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_categorias WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT * FROM pw_categorias WHERE status = '1' ORDER BY nome";
+$query2 = sqlsrv_query($conn, $sql2);
+
+if($row['QTDE'] == 0) echo "<p id='semResultados'>Nenhuma Categoria Encontrada!<a href='categorias/adicionar'><span>Adicionar a Primeira</span></a></p>";
+
+for($i = 0; $i < $row['QTDE'];$i++) {
+
+$row2 = sqlsrv_fetch_array($query2);
+
+?><div class="list categoria">
+
+<div class="nomeCategoria"><a href="categorias/<?=$row2['id']?>"><?=$row2['nome']?></a></div>
+
+<div class="menuCategoria"><div class="menuList"><span class="linha linha1"></span><span class="linha linha2"></span><span class="linha linha3"></span></div></div>
+
+</div><?php } ?>
+
+</div>
+
+
+<?php } else if($hierarquia[1] != 'adicionar' && $hierarquia[1] != 'editar' && $hierarquia[1] != 'excluir') { 
+	// Ao Possuír Página Filha verifica se é uma Categoria.
+ 
+$sql = "SELECT * FROM pw_categorias WHERE status = '1' AND id='".$hierarquia[1]."'";
+$query = sqlsrv_query($conn, $sql);
+$row = sqlsrv_fetch_array($query);
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>categorias">Categorias</a> <span class="separador">>></span> <a href="<?=$lnk?>categorias/<?=$hierarquia[1]?>"><?=$row['nome']?></a></div>
+
+<h1 id="tituloPagina">CATEGORIAS | <?=$row['nome']?><a id="botaoAdd" class="editar" href="./editar/<?=$row['id']?>"><span>Editar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<div class="item">
+	<span class="tituloItem">Nome</span><span class="valorItem"><?=$row['nome']?></span>
+</div>
+
+
+<div id="navegacaoInferior">
+	
+	<a id="navegacaoVoltar" href="<?=$lnk;?>categorias">Voltar</a>
+	<a id="navegacaoExcluir" href="<?=$lnk;?>categorias/excluir/<?=$row['id']?>">Excluir</a>
+
+</div>
+
+</div>
+
+
+<?php } else if($hierarquia[1] == 'adicionar') { // Verifica se a Página Filha é ADICIONAR
+
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>categorias">Categorias</a> <span class="separador">>></span> <a href="<?=$lnk?>categorias/adicionar">Adicionar</a></div>
+
+<h1 id="tituloPagina">CATEGORIAS | Adicionar Nova Categoria</h1>
+
+<div id="conteudoCinza">
+
+<form id="formAdicionar" method="post" action="../categorias">
+
+<input type="hidden" name="acao" value="adicionar">
+
+<label>Nome da Categoria<input type="text" name="nome" required></label>
+
+<input type="hidden" name="ativo" value="1">
+
+
+
+<input type="submit" value="Salvar">
+
+</form>
+
+</div>
+
+
+
+<?php } if($hierarquia[1] == 'editar') { // Verifica se a Página Filha é EDITAR
+
+$sql = "SELECT * FROM pw_categorias WHERE status = '1' AND id='".$hierarquia[2]."'";
+$query = sqlsrv_query($conn, $sql);
+$row = sqlsrv_fetch_array($query);
+
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>categorias">Categorias</a> <span class="separador">>></span> <a href="<?=$lnk?>categorias/<?=$row['id']?>"><?=$row['nome']?></a> <span class="separador">>></span> <a href="<?=$lnk?>categorias/editar/<?=$row['id']?>">Editar</a></div>
+
+<h1 id="tituloPagina">CATEGORIAS | Editar Categoria | <?=$row['nome']?></h1>
+
+<div id="conteudoCinza">
+
+<form id="formAdicionar" method="post" action="../../categorias">
+
+<input type="hidden" name="acao" value="editar">
+<input type="hidden" name="idCategoria" value="<?=$row['id']?>">
+
+<label>Nome da Categoria<input type="text" name="nome" value="<?=$row['nome']?>" required></label>
+
+<input type="hidden" name="ativo" value="1">
+
+
+
+<input type="submit" value="Salvar">
+
+</form>
+
+</div>
+
+<?php } } ?>

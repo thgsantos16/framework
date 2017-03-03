@@ -1,0 +1,135 @@
+<?php
+
+// Página de Gerencimanento de Usuários
+
+if($_POST['acao']) { // Verifica se algum formulário foi setado
+	if($_POST['acao'] == "adicionar") { // Verifica se o Método é ADICIONAR
+		$sql = "INSERT INTO pw_usuarios (nome, login, senha, status) VALUES ('".$_POST['nome']."','".$_POST['login']."','".$_POST['senha']."', '".$_POST['ativo']."')";
+		$query = sqlsrv_query($conn, $sql);
+
+		//echo $sql;
+
+		if($query) {
+			echo '<h1 id="tituloPagina">Inserido com Sucesso!</h1>
+
+	<div id="conteudoCinza">';
+			echo "<a href='usuarios' id='botaoVoltar'><span>Voltar</span></a>";
+			echo "</div>";
+		}
+	}
+}
+
+
+else { // Se nenhum formulário foi setado
+$hierarquia = explode("/", $url); // $hierarquia é a Variável que recebe as Páginas Filhas
+
+if(!isset($hierarquia[1])) { // Verifica se NÃO possui Páginas Filhas
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>usuarios">Usuários</a></div>
+
+<h1 id="tituloPagina">usuários<a id="botaoAdd" href="usuarios/adicionar">+<span>Adicionar</span></a></h1>
+
+<div id="conteudoCinza">
+
+<?php
+
+$sql = "SELECT COUNT (*) AS QTDE FROM pw_usuarios WHERE status = '1'";
+$query = sqlsrv_query($conn, $sql);
+$num = sqlsrv_num_rows($query);
+$row = sqlsrv_fetch_array($query);
+
+$sql2 = "SELECT * FROM pw_usuarios WHERE status = '1'";
+$query2 = sqlsrv_query($conn, $sql2);
+
+if($row['QTDE'] == 0) echo "<p id='semResultados'>Nenhum Usuário Encontrado!<a href='usuarios/adicionar'><span>Adicionar o Primeiro</span></a></p>";
+
+for($i = 0; $i < $row['QTDE'];$i++) {
+
+$row2 = sqlsrv_fetch_array($query2);
+
+?><a href="usuarios/<?=$row2['id']?>" class="grid usuario">
+
+<div class="imagemUsuario"></div>
+
+<div class="nomeUsuario"><?=$row2['nome']?></div>
+
+</a><?php } ?>
+
+</div>
+
+
+<?php } else if($hierarquia[1] != 'adicionar' && $hierarquia[1] != 'editar' && $hierarquia[1] != 'excluir') { 
+
+$sql = "SELECT * FROM pw_usuarios WHERE status = '1' AND id='".$hierarquia[1]."'";
+$query = sqlsrv_query($conn, $sql);
+$row = sqlsrv_fetch_array($query);
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>usuarios">Usuários</a> <span class="separador">>></span> <a href="<?=$lnk?>usuarios/<?=$hierarquia[1]?>"><?=$row['nome']?></a></div>
+
+<h1 id="tituloPagina">usuários | <?=$row['nome']?></h1>
+
+<script>
+
+function editarImagem() {
+	$("#sombraBranca").fadeIn();
+	$("#divNovaImagem").fadeIn();
+}
+
+</script>
+
+
+<div id="divNovaImagem" class="divModal">	
+
+
+</div>
+
+
+
+<div id="conteudoCinza">
+
+<div id="timeUsuario"></div><div id="colunaRight">
+	
+	<div id="imagemPerfil"><a onclick="editarImagem()">Editar</a></div>
+
+	<div id="dadosUsuario">
+		<span id="nomeUsuario"><?=$row['nome']?></span>
+	</div>
+
+	<div id="menuUsuario"></div>
+
+</div>
+
+</div>
+
+
+<?php } else if($hierarquia[1] == 'adicionar') { 
+
+
+?><div id="breadcrumbs"><a href="<?=$lnk?>">Dashboard</a> <span class="separador">>></span> <a href="<?=$lnk?>usuarios">Usuários</a> <span class="separador">>></span> <a href="<?=$lnk?>usuarios/adicionar">Adicionar</a></div>
+
+<h1 id="tituloPagina">usuários | Adicionar Novo Usuário</h1>
+
+<div id="conteudoCinza">
+
+<form id="formAdicionar" method="post" action="../usuarios">
+
+<input type="hidden" name="acao" value="adicionar">
+
+<label>Nome da Usuário<input type="text" name="nome" required></label>
+<label>Login<input type="text" name="login" required></label>
+<label>Senha<input type="password" name="senha" required></label>
+<label>Repetir Senha<input type="password" name="senha2" required></label>
+
+<input type="hidden" name="ativo" value="1">
+
+
+
+<input type="submit" value="Salvar">
+
+</form>
+
+</div>
+
+
+
+<?php } } ?>
